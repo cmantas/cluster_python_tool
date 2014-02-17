@@ -1,24 +1,30 @@
 __author__ = 'cmantas'
 
-import VM
-
 from VM import *
-from persistance_module import env_vars
+from lib.persistance_module import env_vars
 
 
 class CassandraNode:
-
+    """
+    Class that represents a node in a cassandra cluster. Can be of type 'SEED' or 'REGULAR' (default)
+    """
+    #static vars
     image = env_vars["cassandra_base_image"]
     seed_flavor = env_vars["cassandra_seed_flavor"]
     node_flavor = env_vars["cassandra_node_flavor"]
-    name = None
-    vm = None
-    node_type = None
-    bootstraped = False
 
-    def __init__(self, name, node_type, create=False, vm=None):
+    def __init__(self, name, node_type="REGULAR", create=False, vm=None):
+        """
+        Creates a CassandraNode object.
+        :param name:
+        :param node_type: if "SEED" then will be treated as seednode
+        :param create: if True then the actual VM will be created
+        :param vm: if not None then this CassandraNode will be created from an existing vm
+        """
+        bootstraped = False
         self.name = name
-        self.node_type = node_type
+        self.type = node_type
+        self.vm = None
         if not vm is None:
             # init a node from a VM
             self.from_vm(VM)
@@ -26,10 +32,10 @@ class CassandraNode:
 
     def create(self):
         """
-        creates a VM that is a Cassandra Node
+        creates the VM that this Cassandra Node will run on
         :return:
         """
-        if self.node_type == "SEED":
+        if self.type == "SEED":
             flavor = self.seed_flavor
         else:
             flavor = self.node_flavor
@@ -37,6 +43,11 @@ class CassandraNode:
         self.vm = VM(self.name, flavor, self.image, create=True)
 
     def from_vm(self, vm):
+        """
+        Creates a CassandraNode from an existing VM
+        :param vm:
+        :return:
+        """
         if not vm.created:
             print  "this VM is not created, so you cann't create a node from it"
         self.name = vm.name
@@ -44,18 +55,23 @@ class CassandraNode:
 
     def bootstrap(self, params = None):
         """
-        Bootstraps a node with the rest of the cluster
+        Bootstraps a node with the rest of the Casandra cluster
         :return:
         """
         self.vm.wait_ready()
-        print "NODE: %s started" % self.name
-        if self.node_type == "SEED":
+        print "NODE: '%s' booted, running bootstrap scripts" % self.name
+        if self.type == "SEED":
             command = "c-tool be_seed && c-tool full_start"
         else:
-            command = "c-tool configure %s && c-tool full_start && service ganglia-monitor restart" % params["seednode"]
+            command = "c-tool configure %s && c-tool full_start" % params["seednode"]
         print self.vm.run_command(command)
+        print "NODE: %s is now bootstrapped" % self.name
 
     def decommission(self):
+        """
+        Cecommissions a node from the Cassandra Cluster
+        :return:
+        """
         print "decommissioning node: " + self.name
         keyspace = env_vars['keyspace']
         priv_ip = self.vm.get_private_address()

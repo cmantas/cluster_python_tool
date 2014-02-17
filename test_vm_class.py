@@ -1,5 +1,5 @@
 from VM import *
-from persistance_module import env_vars
+from lib.persistance_module import env_vars
 
 server_name = "test_node"
 flavor_id = 1;

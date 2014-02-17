@@ -1,5 +1,7 @@
 {
-    "cassandra_base_image": "23db255b-6991-40a6-8425-a650e9925948",
+    "auth_url" : "https://accounts.okeanos.grnet.gr/identity/v2.0",
+    "cmantas_token": "CDMHm0I2l7gKXnoESHdUExMDTNRglLHI06hbOKZl9m8",
+    "cassandra_base_image": "440d9ca1-9132-4880-b96f-c7ebed5f3150",
     "ubuntu_bare_image": "t545d36df-53da-46bd-86ed-759ac3eb1995",
     "cassandra_network_id": 67768,
     "cassandra_seed_flavor": 165,

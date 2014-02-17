@@ -2,46 +2,46 @@
   "addresses": {}, 
   "links": [
     {
-      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/453886", 
+      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/457039", 
       "rel": "self"
     }, 
     {
-      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/453886", 
+      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/457039", 
       "rel": "bookmark"
     }
   ], 
   "image": {
-    "id": "23db255b-6991-40a6-8425-a650e9925948", 
+    "id": "440d9ca1-9132-4880-b96f-c7ebed5f3150", 
     "links": [
       {
-        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/images/23db255b-6991-40a6-8425-a650e9925948", 
+        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/images/440d9ca1-9132-4880-b96f-c7ebed5f3150", 
         "rel": "self"
       }, 
       {
-        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/images/23db255b-6991-40a6-8425-a650e9925948", 
+        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/images/440d9ca1-9132-4880-b96f-c7ebed5f3150", 
         "rel": "bookmark"
       }, 
       {
-        "href": "https://cyclades.okeanos.grnet.gr/image/v1.0/images/23db255b-6991-40a6-8425-a650e9925948", 
+        "href": "https://cyclades.okeanos.grnet.gr/image/v1.0/images/440d9ca1-9132-4880-b96f-c7ebed5f3150", 
         "rel": "alternate"
       }
     ]
   }, 
   "suspended": false, 
   "flavor": {
-    "id": 1, 
+    "id": 165, 
     "links": [
       {
-        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/flavors/1", 
+        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/flavors/165", 
         "rel": "self"
       }, 
       {
-        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/flavors/1", 
+        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/flavors/165", 
         "rel": "bookmark"
       }
     ]
   }, 
-  "id": 453886, 
+  "id": 457039, 
   "security_groups": [
     {
       "name": "default"
@@ -54,14 +54,14 @@
   "progress": 0, 
   "config_drive": "", 
   "status": "BUILD", 
-  "updated": "2014-02-13T16:19:07.255199+00:00", 
+  "updated": "2014-02-17T17:38:43.419122+00:00", 
   "hostId": "", 
-  "SNF:fqdn": "snf-453886.vm.okeanos.grnet.gr", 
+  "SNF:fqdn": "snf-457039.vm.okeanos.grnet.gr", 
   "key_name": null, 
   "name": "cassandra_node_1", 
-  "adminPass": "Pop7QBg4BQ", 
+  "adminPass": "zYcC3xHHHy", 
   "tenant_id": "51819571-6e2e-429e-8ffe-0f1999acbc1c", 
-  "created": "2014-02-13T16:19:06.186564+00:00", 
+  "created": "2014-02-17T17:38:42.204362+00:00", 
   "SNF:task_state": "BULDING", 
   "diagnostics": [], 
   "metadata": {

@@ -8,12 +8,10 @@ import sys, json
 from datetime import datetime
 
 db_file = 'files/persitance.db'
-CREDENTIALS_FILE = 'files/okeanos_credentials.json'
 ROLES_FILE = 'files/roles.json'
 ENV_VARS_FILE = 'files/env_vars.json'
 
 #dictinory of credentials per user
-credentials = dict()
 init_scripts = dict()
 env_vars = dict()
 
@@ -78,20 +76,6 @@ def get_vm_ids_by_role(role):
     return [r[0] for r in execute_query(query)]
 
 
-def load_credentials():
-    """
-    loads the credentials from the CREDENTIALS_FILE in memory
-    :return:
-    """
-    credentials_string = open(CREDENTIALS_FILE, 'r').read()
-    credentials_in = json.loads(credentials_string)
-    for c in credentials_in:
-        user = c['user']; expiry_txt = c['expiry']
-        expiry = date_object = datetime.strptime(expiry_txt, '%Y-%m-%d')
-        c['expiry'] = expiry
-        credentials[user] = c
-
-
 def load_roles():
     """
     loads the roles and their particulars from the ROLES_FILE in memory
@@ -108,15 +92,12 @@ def get_credentials(user):
     :param user: the user name of for whom the credentials will be loaded
     :return: url, token
     """
-    c = credentials[user]
-    url = c['auth_url']; token = c['token']; expiry = c['expiry']
-    if expiry<datetime.now():
-        print "ERROR: okeanos auth token has expired"
+    url = env_vars["auth_url"]
+    token = env_vars[user+"_token"]
     return url, token
 
 
 # load the credentials from the relevant file
-load_credentials()
 load_roles()
 #load the images from the file
 env_vars = json.loads(open(ENV_VARS_FILE, 'r').read())

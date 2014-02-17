@@ -8,16 +8,16 @@ from kamaki.clients.astakos import getLogger  #not working fuck yeah
 from kamaki.clients.cyclades import CycladesClient, CycladesNetworkClient
 #http://www.synnefo.org/docs/kamaki/latest/developers/code.html#the-client-api-ref
 from sys import stderr
-from os.path import abspath,exists
-from os import mkdir
+from os.path import abspath
 from base64 import b64encode
-from persistance_module import *
+from lib.persistance_module import *
 from logging import ERROR
 
 USER = "cmantas"
 
 #retrieve the credentials for the specified users
 AUTHENTICATION_URL, TOKEN = get_credentials(USER)
+
 synnefo_user = AstakosClient(AUTHENTICATION_URL, TOKEN)
 synnefo_user.logger.setLevel(ERROR)
 getLogger().setLevel(ERROR)

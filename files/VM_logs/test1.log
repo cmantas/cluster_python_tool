@@ -2,27 +2,27 @@
   "addresses": {}, 
   "links": [
     {
-      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/454538", 
+      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/456997", 
       "rel": "self"
     }, 
     {
-      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/454538", 
+      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/456997", 
       "rel": "bookmark"
     }
   ], 
   "image": {
-    "id": "23db255b-6991-40a6-8425-a650e9925948", 
+    "id": "440d9ca1-9132-4880-b96f-c7ebed5f3150", 
     "links": [
       {
-        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/images/23db255b-6991-40a6-8425-a650e9925948", 
+        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/images/440d9ca1-9132-4880-b96f-c7ebed5f3150", 
         "rel": "self"
       }, 
       {
-        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/images/23db255b-6991-40a6-8425-a650e9925948", 
+        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/images/440d9ca1-9132-4880-b96f-c7ebed5f3150", 
         "rel": "bookmark"
       }, 
       {
-        "href": "https://cyclades.okeanos.grnet.gr/image/v1.0/images/23db255b-6991-40a6-8425-a650e9925948", 
+        "href": "https://cyclades.okeanos.grnet.gr/image/v1.0/images/440d9ca1-9132-4880-b96f-c7ebed5f3150", 
         "rel": "alternate"
       }
     ]
@@ -41,7 +41,7 @@
       }
     ]
   }, 
-  "id": 454538, 
+  "id": 456997, 
   "security_groups": [
     {
       "name": "default"
@@ -54,14 +54,14 @@
   "progress": 0, 
   "config_drive": "", 
   "status": "BUILD", 
-  "updated": "2014-02-14T11:41:32.238983+00:00", 
+  "updated": "2014-02-17T17:13:42.405580+00:00", 
   "hostId": "", 
-  "SNF:fqdn": "snf-454538.vm.okeanos.grnet.gr", 
+  "SNF:fqdn": "snf-456997.vm.okeanos.grnet.gr", 
   "key_name": null, 
   "name": "test1", 
-  "adminPass": "RmuZTu28HR", 
+  "adminPass": "yq46mTGVOr", 
   "tenant_id": "51819571-6e2e-429e-8ffe-0f1999acbc1c", 
-  "created": "2014-02-14T11:41:30.849441+00:00", 
+  "created": "2014-02-17T17:13:40.920539+00:00", 
   "SNF:task_state": "BULDING", 
   "diagnostics": [], 
   "metadata": {

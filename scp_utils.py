@@ -2,6 +2,7 @@ __author__ = 'cmantas'
 
 #python ssh lib
 import paramiko
+import string
 import sys
 from socket import error as socketError
 sys.path.append('lib/scp.py')
@@ -19,9 +20,14 @@ private_key = paramiko.RSAKey.from_private_key_file(priv_key_path)
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
 
+def reindent(s, numSpaces, prefix=''):
+    s = string.split(s, '\n')
+    s = [(numSpaces * ' ') +prefix+ string.lstrip(line) for line in s]
+    s = string.join(s, '\n')
+    return s
 
 
-def run_ssh_command(host, user, command):
+def run_ssh_command(host, user, command, indent=1, prefix="$: "):
     """
     runs a command via ssh to the specified host
     :param host:
@@ -37,7 +43,7 @@ def run_ssh_command(host, user, command):
         ret += line
     for line in stderr:
         ret += line
-    return ret
+    return reindent(ret, indent, prefix=prefix)
 
 
 def put_file_scp (host, user, files, remote_path='.', recursive=False):
