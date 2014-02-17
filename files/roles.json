@@ -1,0 +1,14 @@
+{
+    "cassandra_client": {
+        "init_scripts": [
+            "scripts/configure_cassandra",
+            "files/dummy_file"
+        ]
+    },
+    "test_role_2": {
+        "init_scripts": [
+             "dummy_file",
+             "dummy_file"
+        ]
+    }
+}

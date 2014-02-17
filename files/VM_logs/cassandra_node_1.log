@@ -1,0 +1,72 @@
+{
+  "addresses": {}, 
+  "links": [
+    {
+      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/453886", 
+      "rel": "self"
+    }, 
+    {
+      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/453886", 
+      "rel": "bookmark"
+    }
+  ], 
+  "image": {
+    "id": "23db255b-6991-40a6-8425-a650e9925948", 
+    "links": [
+      {
+        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/images/23db255b-6991-40a6-8425-a650e9925948", 
+        "rel": "self"
+      }, 
+      {
+        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/images/23db255b-6991-40a6-8425-a650e9925948", 
+        "rel": "bookmark"
+      }, 
+      {
+        "href": "https://cyclades.okeanos.grnet.gr/image/v1.0/images/23db255b-6991-40a6-8425-a650e9925948", 
+        "rel": "alternate"
+      }
+    ]
+  }, 
+  "suspended": false, 
+  "flavor": {
+    "id": 1, 
+    "links": [
+      {
+        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/flavors/1", 
+        "rel": "self"
+      }, 
+      {
+        "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/flavors/1", 
+        "rel": "bookmark"
+      }
+    ]
+  }, 
+  "id": 453886, 
+  "security_groups": [
+    {
+      "name": "default"
+    }
+  ], 
+  "attachments": [], 
+  "user_id": "51819571-6e2e-429e-8ffe-0f1999acbc1c", 
+  "accessIPv4": "", 
+  "accessIPv6": "", 
+  "progress": 0, 
+  "config_drive": "", 
+  "status": "BUILD", 
+  "updated": "2014-02-13T16:19:07.255199+00:00", 
+  "hostId": "", 
+  "SNF:fqdn": "snf-453886.vm.okeanos.grnet.gr", 
+  "key_name": null, 
+  "name": "cassandra_node_1", 
+  "adminPass": "Pop7QBg4BQ", 
+  "tenant_id": "51819571-6e2e-429e-8ffe-0f1999acbc1c", 
+  "created": "2014-02-13T16:19:06.186564+00:00", 
+  "SNF:task_state": "BULDING", 
+  "diagnostics": [], 
+  "metadata": {
+    "os": "debian", 
+    "users": "root"
+  }, 
+  "SNF:port_forwarding": {}
+}
