@@ -2,11 +2,11 @@
   "addresses": {}, 
   "links": [
     {
-      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/457039", 
+      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/457725", 
       "rel": "self"
     }, 
     {
-      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/457039", 
+      "href": "https://cyclades.okeanos.grnet.gr/compute/v2.0/servers/457725", 
       "rel": "bookmark"
     }
   ], 
@@ -41,7 +41,7 @@
       }
     ]
   }, 
-  "id": 457039, 
+  "id": 457725, 
   "security_groups": [
     {
       "name": "default"
@@ -54,14 +54,14 @@
   "progress": 0, 
   "config_drive": "", 
   "status": "BUILD", 
-  "updated": "2014-02-17T17:38:43.419122+00:00", 
+  "updated": "2014-02-18T12:16:51.234804+00:00", 
   "hostId": "", 
-  "SNF:fqdn": "snf-457039.vm.okeanos.grnet.gr", 
+  "SNF:fqdn": "snf-457725.vm.okeanos.grnet.gr", 
   "key_name": null, 
   "name": "cassandra_node_1", 
-  "adminPass": "zYcC3xHHHy", 
+  "adminPass": "qUKKgpYF6m", 
   "tenant_id": "51819571-6e2e-429e-8ffe-0f1999acbc1c", 
-  "created": "2014-02-17T17:38:42.204362+00:00", 
+  "created": "2014-02-18T12:16:49.684159+00:00", 
   "SNF:task_state": "BULDING", 
   "diagnostics": [], 
   "metadata": {

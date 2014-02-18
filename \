@@ -1,4 +1,0 @@
-IdentityFile ~/.ssh/just_a_key
-IdentityFile ~/.github_key
-Host *
-    StrictHostKeyChecking no

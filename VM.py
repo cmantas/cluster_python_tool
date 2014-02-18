@@ -6,6 +6,7 @@ from os.path import exists
 from os import mkdir
 from scp_utils import *
 import ntpath
+import thread
 
 LOGS_DIR = "files/VM_logs"
 ATTEMPT_INTERVAL = 2
@@ -41,7 +42,6 @@ class VM:
         self.id = -1
         if create:
             self.create(wait)
-            self.load_addresses()
 
     def load_addresses(self):
         """
@@ -60,22 +60,30 @@ class VM:
         self.name = in_dict['name']
         self.id = in_dict['id']
 
-    def create(self, wait=True):
+    def create(self, wait):
+        print ("VM: creating '"+self.name+"'"),
+        if wait:
+            print "(sync)"
+            self.create_sync(self.name)
+            self.wait_ready()
+        else:
+            print "(async)"
+            thread.start_new_thread(self.create_sync, ("name", None))
+
+    def create_sync(self, name, arg=None):
         """
         Creates this VM in the underlying IaaS provider
         """
         #start the timer
         timer = Timer()
         timer.start()
-        print "VM: creating '"+self.name+"'"
         self.id = iaas.create_server(self.name, self.flavor_id, self.image_id, LOGS_DIR+"/%s.log" % self.name)
         new_status = iaas.get_vm_status(self.id)
-        print('\tIaaS status for VM "%s" is now: %s' % (self.name, new_status or 'not changed yet')),
-        if wait:
-            self.wait_ready()
+        print('VM: IaaS status for VM "%s" is now: %s' % (self.name, new_status or 'not changed yet')),
         delta = timer.stop()
-        print "- took %dsec. (waited for ssh:%r)" % (delta, wait)
+        print "- took %dsec." % delta
         self.created = True
+        self.load_addresses()
 
     def shutdown(self):
         """
@@ -189,7 +197,10 @@ class VM:
         """
         success = False
         attempts = 0
-        print "VM: Waiting for SSH deamon of %s, on addr: %s :" % (self.name, self.get_public_addr()),
+        if not self.created:
+            print "VM: %s not created yet, waiting for creation" % self.name
+            while not self.created:  sleep(3)
+        print "VM: Waiting for SSH deamon of '%s', on addr: %s" % (self.name, self.get_public_addr())
         #time to stop trying
         end_time = datetime.now()+timedelta(seconds=ssh_giveup_timeout)
         timer = Timer()
@@ -204,9 +215,10 @@ class VM:
                 if datetime.now() > end_time:
                     break
                 sleep(ATTEMPT_INTERVAL)
-        if success: print (" OK"),
-        else: print(" FAIL"),
-        print (" - waited for " + str(timer.stop())+" sec"),
+        print("VM: SSH of %s: " % self.name),
+        if success: print ("OK"),
+        else: print("FAIL"),
+        print (" - took " + str(timer.stop())+" sec")
         return success
 
     def connect(self, network_id):

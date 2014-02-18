@@ -28,7 +28,8 @@ class CassandraNode:
         if not vm is None:
             # init a node from a VM
             self.from_vm(VM)
-        if create: self.create()
+        if create:
+            self.create()
 
     def create(self):
         """
@@ -58,6 +59,7 @@ class CassandraNode:
         Bootstraps a node with the rest of the Casandra cluster
         :return:
         """
+        print "NODE: waiting for %s to be ready" % self.name
         self.vm.wait_ready()
         print "NODE: '%s' booted, running bootstrap scripts" % self.name
         if self.type == "SEED":
