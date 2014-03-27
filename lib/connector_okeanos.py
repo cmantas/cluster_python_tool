@@ -51,7 +51,6 @@ def personality(username):
     return personality
 
 
-
 def get_addreses(vm_id):
     nics = cyclades_client.get_server_nics(vm_id)
     addresses = nics["addresses"]
@@ -63,7 +62,7 @@ def get_addreses(vm_id):
     return rv
 
 
-def create_server(name, flavor_id, image_id, log_path):
+def create_vm(name, flavor_id, image_id, log_path):
     """
     Creates this VM in the okeanos through kamaki
     """
@@ -111,17 +110,9 @@ def get_vm_details(vm_id):
     return {'name': name, 'id':vm_id, 'flavor_id': flavor_id, 'image_id': image_id}
 
 
-def get_vm_host(vm_id):
-    return "snf-%s.vm.okeanos.grnet.gr" % vm_id
-
-
 def get_all_vm_ids():
     vm_ids=[]
     vm_list = cyclades_client.list_servers()
     for v in vm_list: vm_ids.append(v['id'])
     return vm_ids
 
-
-def connect_vm_to_network(vm_id, network_id):
-    cyclades_client.connect_server( )
-    cyclades_net_client.create_port(network_id, vm_id)

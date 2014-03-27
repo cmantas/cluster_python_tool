@@ -1,23 +1,19 @@
 from VM import *
-from lib.persistance_module import env_vars
+from lib.persistance_module import env_vars, get_script_text
 
 server_name = "test_node"
 flavor_id = 1;
 image_id = env_vars['cassandra_base_image']
 
+# for vm in get_all_vms():
+#     script_text = get_script_text("test")
+#     script_text += get_script_text("test")
+#     print vm.run_command(script_text)
 
-
-testVM = VM("test1", flavor_id, image_id, create=False)
-testVM.create_sync(wait= False)
-timer = Timer(); timer.start()
-testVM.wait_ready()
-delta= timer.stop()
-print "ssh active in : "+str(testVM.name)+"in %d seconds" % delta
-
-
-testVM2 = VM("test2", flavor_id, image_id, create=False)
-testVM2.create_sync(wait=False)
-timer = Timer(); timer.start()
-testVM2.wait_ready()
-delta= timer.stop()
-print "ssh active in: "+str(testVM2.name)+"in %d seconds" % delta
+client_count = 2
+record_count = 2000
+step = record_count/client_count
+start = 0
+script_text = get_script_text("ycsb_load") %(str(record_count), str(step), str(start))
+start += step
+print script_text

@@ -5,6 +5,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Celar" />
+    <orderEntry type="module" module-name="untitled" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="myDocStringFormat" value="reStructuredText" />

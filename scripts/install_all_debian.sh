@@ -32,7 +32,7 @@ service apache2 stop && service apache2 start
 
 #YCSB
 #download from pithos
-wget --no-check-certificate https://pithos.okeanos.grnet.gr/public/x7dSDevWTaHwccG9qfFVC -O YCSB.tar.gz
+wget --no-check-certificate https://pithos.okeanos.grnet.gr/public/qEAz3J3FdxvxhdwoKDZGV -O YCSB.tar.gz
 tar -xvf YCSB.tar.gz -C /etc && rm YCSB.tar.gzls
 echo "export WORKLOADS=/etc/YCSB/workloads" >> ~/.bashrc
 echo "export PATH=$PATH:/etc/YCSB/bin/:" >> ~/.bashrc

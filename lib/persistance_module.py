@@ -7,13 +7,17 @@ import sqlite3 as lite
 import sys, json
 from datetime import datetime
 
-db_file = 'files/persitance.db'
-ROLES_FILE = 'files/roles.json'
 ENV_VARS_FILE = 'files/env_vars.json'
+OPENSTACK_NAMES_FILE = 'files/openstack_names.json'
 
-#dictinory of credentials per user
-init_scripts = dict()
-env_vars = dict()
+db_file = "files/persistance.db"
+
+
+#load the env vars from file
+env_vars = json.loads(open(ENV_VARS_FILE, 'r').read())
+
+#load the openstack names from file
+openstack_names = json.loads(open(OPENSTACK_NAMES_FILE, 'r').read())
 
 
 def executescript(script):
@@ -26,10 +30,14 @@ def executescript(script):
         if con: con.rollback()
         print "Error %s:" % e.args[0]
     finally:
-        if con: con.close()
+        try:
+            con
+            con.close()
+        except NameError:
+            pass
 
 # INIT the tables
-executescript("CREATE TABLE IF NOT EXISTS ROLES(VMID INTEGER PRIMARY KEY, Role TEXT)")
+#executescript("CREATE TABLE IF NOT EXISTS ROLES(VMID INTEGER PRIMARY KEY, Role TEXT)")
 
 
 def execute_query(query):
@@ -51,41 +59,6 @@ def execute_lookup(query):
     for r in execute_query(query): return r
 
 
-def add_role(VMID, Role):
-    script_remove = "DELETE FROM ROLES WHERE VMID=%d" % VMID
-    executescript(script_remove)
-    script_add = "INSERT INTO ROLES VALUES (%d, '%s');" % (VMID, Role)
-    executescript(script_add)
-
-def remove_vm(VMID):
-    script_remove = "DELETE FROM ROLES WHERE VMID=%d" % VMID
-    executescript(script_remove)
-
-
-def get_role(VMID):
-    query = "SELECT Role FROM ROLES WHERE VMID='%d'" % VMID
-    return execute_lookup(query)[0]
-
-
-def get_vm_ids_by_role(role):
-    """
-    returns all VM ids of the role specified
-    :param role:
-    """
-    query = "SELECT VMID FROM ROLES WHERE Role='%s'" % role
-    return [r[0] for r in execute_query(query)]
-
-
-def load_roles():
-    """
-    loads the roles and their particulars from the ROLES_FILE in memory
-    :return:
-    """
-    roles_in = json.loads(open(ROLES_FILE, 'r').read())
-    for role in roles_in:
-        init_scripts[role] = roles_in[role]['init_scripts']
-
-
 def get_credentials(user):
     """
     retreives the authentication url and authentication  token for the given user
@@ -97,8 +70,20 @@ def get_credentials(user):
     return url, token
 
 
-# load the credentials from the relevant file
-load_roles()
-#load the images from the file
-env_vars = json.loads(open(ENV_VARS_FILE, 'r').read())
+def store_openstack_name(vm_id, name):
+    """
+    adds the name to the dictionary and writes it to the output file
+    :param vm_id:
+    :param name:
+    :return:
+    """
+    openstack_names[vm_id] = name
+    with open(OPENSTACK_NAMES_FILE, 'w') as outfile:
+        json.dump(openstack_names, outfile, indent=3)
+
+
+def get_script_text(name):
+    filename = env_vars[name]
+    file = open(filename, 'r')
+    return file.read()+"\n"
 

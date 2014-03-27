@@ -1,5 +1,3 @@
-from lib import connector_okeanos as iaas
-
 __author__ = 'cmantas'
 from sys import stderr
 from os.path import exists
@@ -7,6 +5,15 @@ from os import mkdir
 from scp_utils import *
 import ntpath
 import thread
+from lib.persistance_module import env_vars
+
+#choose the IaaS provider
+infrastructure = env_vars['iaas']
+if infrastructure == 'okeanos':
+    from lib import connector_okeanos as iaas
+if infrastructure == 'openstack':
+    from lib import connector_eucalyptus as iaas
+
 
 LOGS_DIR = "files/VM_logs"
 ATTEMPT_INTERVAL = 2
@@ -64,24 +71,23 @@ class VM:
         print ("VM: creating '"+self.name+"'"),
         if wait:
             print "(sync)"
-            self.create_sync(self.name)
+            self.create_sync()
             self.wait_ready()
         else:
             print "(async)"
-            thread.start_new_thread(self.create_sync, ("name", None))
+            thread.start_new_thread(self.create_sync, ())
 
-    def create_sync(self, name, arg=None):
+    def create_sync(self):
         """
         Creates this VM in the underlying IaaS provider
         """
         #start the timer
         timer = Timer()
         timer.start()
-        self.id = iaas.create_server(self.name, self.flavor_id, self.image_id, LOGS_DIR+"/%s.log" % self.name)
+        self.id = iaas.create_vm(self.name, self.flavor_id, self.image_id, LOGS_DIR+"/%s.log" % self.name)
         new_status = iaas.get_vm_status(self.id)
-        print('VM: IaaS status for VM "%s" is now: %s' % (self.name, new_status or 'not changed yet')),
         delta = timer.stop()
-        print "- took %dsec." % delta
+        print 'VM: IaaS status for "%s" is now %s (took %d sec)' % (self.name, new_status, delta )
         self.created = True
         self.load_addresses()
 
@@ -103,6 +109,7 @@ class VM:
 
     def destroy(self):
         """Issues the 'destory' command to the IaaS provider  """
+        print "VM: Destroying %s" % self.name
         iaas.destroy_vm(self.id)
 
     def __str__(self):
@@ -136,14 +143,11 @@ class VM:
         vm_dict = iaas.get_vm_details(vm_id)
         return VM.vm_from_dict(vm_dict)
 
-    def get_host(self):
-        """the host string for this VM """
-        return iaas.get_vm_host(self.id)
 
     def get_cloud_status(self):
         return iaas.get_vm_status(self.id)
 
-    def run_command(self, command, user='root', indent=0, prefix="\t$:  "):
+    def run_command(self, command, user='root', indent=0, prefix="\t$:  ", silent=False):
         """
         runs a command to this VM if it actually exists
         :param command:
@@ -154,8 +158,9 @@ class VM:
             stderr.write('this VM does not exist (yet),'
                          ' so you cannot run commands on it')
             return "ERROR"
-        print "VM: [%s] running SSH command \"%s\"" % (self.name, command)
-        return run_ssh_command(self.get_host(), user, command, indent, prefix)
+        if not silent:
+            print "VM: [%s] running SSH command \"%s\"" % (self.name, command)
+        return run_ssh_command(self.get_public_addr(), user, command, indent, prefix)
 
     def put_files(self, files, user='root', remote_path='.', recursive=False):
         """
@@ -198,9 +203,8 @@ class VM:
         success = False
         attempts = 0
         if not self.created:
-            print "VM: %s not created yet, waiting for creation" % self.name
             while not self.created:  sleep(3)
-        print "VM: Waiting for SSH deamon of '%s', on addr: %s" % (self.name, self.get_public_addr())
+        print "VM: [%s] waiting for SSH deamon (addr: %s)" % (self.name, self.get_public_addr())
         #time to stop trying
         end_time = datetime.now()+timedelta(seconds=ssh_giveup_timeout)
         timer = Timer()
@@ -215,15 +219,10 @@ class VM:
                 if datetime.now() > end_time:
                     break
                 sleep(ATTEMPT_INTERVAL)
-        print("VM: SSH of %s: " % self.name),
-        if success: print ("OK"),
-        else: print("FAIL"),
-        print (" - took " + str(timer.stop())+" sec")
+        if success: print ("VM: %s now ready" % self.name),
+        else: print("VM: %s FAIL to be SSH-able" % self.name),
+        print ("  (took " + str(timer.stop())+" sec)")
         return success
-
-    def connect(self, network_id):
-        """ Issues the connect command to the IaaS (connects this VM to network_id_"""
-        iaas.connect_vm_to_network(self.id, network_id)
 
     def get_public_addr(self):
         """ Returns a publicly accessible IP address !!! for now, only checks for IPv6+fixed !!!"""
@@ -240,8 +239,21 @@ class VM:
             if i.version == 4 and i.type == "fixed":
                 return i.ip
 
+    def inject_hostnames(self, hostnames):
+        #add some default hostnames
+        hostnames["localhost"] = "127.0.0.1"
+        hostnames["ip6-localhost ip6-loopback"] = "::1"
+        hostnames["ip6-localnet"] = "fe00::0"
+        hostnames["ip6-mcastprefix"] = "ff00::0"
+        hostnames["ip6-allnodes"] = "ff02::1"
+        hostnames["ip6-allrouters"] = "ff02::2"
+        text=""
+        for host in hostnames.keys():
+            text += "\n%s %s" % (hostnames[host], host)
+        self.run_command("echo '## AUTO GENERATED #### \n%s' > /etc/hosts; echo %s >/etc/hostname" % (text, self.name), silent=True)
 
-def get_all_vms():
+
+def get_all_vms(check_active=False):
     """
     Creates VM instances for all the VMs of the user available in the IaaS
     """
@@ -249,7 +261,10 @@ def get_all_vms():
     vm_ids = iaas.get_all_vm_ids()
     for vm_id in vm_ids:
         vm = VM.vm_from_dict(iaas.get_vm_details(vm_id))
-        vms.append(vm)
+        if check_active and vm.get_cloud_status() != "ACTIVE":
+            continue
+        else:
+            vms.append(vm)
     return vms
 
 
@@ -276,3 +291,9 @@ class Timer():
         start_time = self.start_time
         self.start_time = 0
         return float(end_time - start_time)/1000
+
+    @staticmethod
+    def get_timer():
+        timer = Timer()
+        timer.start()
+        return timer

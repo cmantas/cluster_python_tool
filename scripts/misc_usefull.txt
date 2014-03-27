@@ -25,14 +25,16 @@ nodetool status | grep $(my_ip) | awk '{print $7}'
 #run my custom ycsb - INSERT
 ycsb load cassandra-cql  -P $WORKLOADS/workloada -p host=127.0.0.1 -p port=9042  -s -threads 1 -p recordcount=1000
 
-#run my custom ycsb - UPDATE READ
-ycsb run cassandra-cql \
-    -P $WORKLOADS/workloada  \
-    -p maxexecutiontime=100000000 \
-    -p host=127.0.0.1 -p port=9042 \
-    -threads 4 \
-    -p operationcount=10000000 \
-    -p recordcount=1000 -s
+
+#cleanup
+ycsb run cassandra-cql     -P $WORKLOADS/workload_tiny  -p host=127.0.0.1 -p port=9042     -threads 2  -s 
+
+#sinusoidal
+ycsb run cassandra-cql  -P $WORKLOADS/workload_read  -threads 20  -s  -p sinusoidal=true    -p target=2000 -p offset=500 -p period=240
+
+#just readS
+ycsb run cassandra-cql -P $WORKLOADS/workloada -p maxexecutiontime=100000000 -p host=127.0.0.1 -p port=9042 -threads 4 -p operationcount=1000 -p recordcount=1000 -s
+
 
 #service configuration
 rcconf
